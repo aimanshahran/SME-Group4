@@ -290,7 +290,12 @@ var countdownTimer = setInterval(\'secondPassed()\', 1000);
             while ($row = mysqli_fetch_array($q)) {
                 $qns = stripslashes($row['qns']);
                 $qid = $row['qid'];
-                echo '<b><pre style="background-color:white"><div style="font-size:20px;font-weight:bold;font-family:calibri;margin:10px">' . $sn . ' : ' . $qns . '</div></pre></b>';
+                echo '<b><pre style="background-color:white"><div style="font-size:20px;font-weight:bold;font-family:calibri;margin:10px">' . $sn . ' : ' . $qns . '</div>';
+                $img = $row['image'];
+                if(!empty($img)){
+                    echo '<img src="uploads/'.$img.'" style="width:300px" />';
+                }
+                echo '</pre></b>';
             }
             
             echo '<form id="qform" action="update.php?q=quiz&step=2&eid=' . $eid . '&n=' . $sn . '&t=' . $total . '&qid=' . $qid . '" method="POST"  class="form-horizontal">
@@ -506,12 +511,18 @@ if (@$_GET['q'] == 3) {
         $showfrom = 1;
         $showtill = 10;
     }
-    $q = mysqli_query($con, "SELECT * FROM rank") or die('Error223');
+    $q = mysqli_query($con, "SELECT * FROM rank");
+    
     echo '<div class="panel title">
 <table class="table table-striped title1" >
 <tr><td style="vertical-align:middle"><b>Rank</b></td><td style="vertical-align:middle"><b>Name</b></td><td style="vertical-align:middle"><b>Branch</b></td><td style="vertical-align:middle"><b>Username</b></td><td style="vertical-align:middle"><b>Score</b></td></tr>';
     $c = $showfrom-1;
-    $total = mysqli_num_rows($q);
+    if(empty($q)){
+        $total = 0;
+    }
+    else {
+        $total = mysqli_num_rows($q);
+    }
     if($total >= $showfrom){
         $q = mysqli_query($con, "SELECT * FROM rank ORDER BY score DESC, time ASC LIMIT ".($showfrom-1).",10") or die('Error223');
         while ($row = mysqli_fetch_array($q)) {
