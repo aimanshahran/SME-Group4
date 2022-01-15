@@ -431,7 +431,7 @@ var countdownTimer = setInterval(\'secondPassed()\', 1000);
                                     &nbsp;&nbsp;&nbsp;&nbsp;
 
                                     
-                                    <button type="submit" class="btn btn-default" disabled="true" id="sbutton" style="height:30px">
+                                    <button type="submit" class="btn btn-primary" disabled="true" id="sbutton" style="height:30px">
                                     <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"  style="font-size:12px"></span>
                                     </button>&nbsp;&nbsp;&nbsp;&nbsp;';
                                 } else if ($_GET["t"] == $_GET["n"])
@@ -448,7 +448,7 @@ var countdownTimer = setInterval(\'secondPassed()\', 1000);
                                     <font style="font-size:12px;font-weight:bold">Reset</font></button>
                                     &nbsp;&nbsp;&nbsp;&nbsp;
                                     
-                                    <button type="submit" class="btn btn-default" disabled="true" id="sbutton" style="height:30px">
+                                    <button type="submit" class="btn btn-primary" disabled="true" id="sbutton" style="height:30px">
                                     <font style="font-size:12px;font-weight:bold">Submit</font></button>
                                     </button>&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -463,7 +463,7 @@ var countdownTimer = setInterval(\'secondPassed()\', 1000);
                                     <font style="font-size:12px;font-weight:bold">Reset</font></button>&nbsp;&nbsp;&nbsp;&nbsp;
                                     
                                      
-                                     <button type="submit" class="btn btn-default" disabled="true" id="sbutton" style="height:30px">
+                                     <button type="submit" class="btn btn-primary" disabled="true" id="sbutton" style="height:30px">
                                     <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"  style="font-size:12px"></span>
                                     </button>&nbsp;&nbsp;&nbsp;&nbsp;</form><br><br>';
                                 } else {
