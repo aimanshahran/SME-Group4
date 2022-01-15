@@ -399,7 +399,11 @@ var countdownTimer = setInterval(\'secondPassed()\', 1000);
                                     $ans = $row['ans'];
                                     $q = mysqli_query($con, "SELECT * FROM options WHERE qid='$qid' AND optionid='$ans'") or die("Error222");
                                     $row = mysqli_fetch_array($q);
-                                    $ans = $row['option'];
+                                    if ($ans != "")
+                                        $ans = $row['option'];
+                                    else {
+                                        $ans == "";
+                                    }
                                 } else {
                                     $ans = "";
                                 }
@@ -411,7 +415,9 @@ var countdownTimer = setInterval(\'secondPassed()\', 1000);
                                 while ($row = mysqli_fetch_array($q)) {
                                     $option   = stripslashes($row['option']);
                                     $optionid = $row['optionid'];
-                                    echo '<div class="funkyradio-success"><input type="radio" id="' . $optionid . '" name="ans" value="' . $optionid . '> <label for="' . $optionid . '" style="width:50%"><div style="color:black;font-size:12px;word-wrap:break-word">&nbsp;&nbsp;' . $option . '</div></label></div>';
+                                    echo
+                                    '<div class="funkyradio-success"><input type="radio" id="' . $optionid . '" name="ans" value="' . $optionid . '" onclick="enable()"> 
+                                    <label for="' . $optionid . '" style="width:50%"><div style="color:black;font-size:12px;word-wrap:break-word">&nbsp;&nbsp;' . $option . '</div></label></div>';
                                 }
                                 echo '</div>';
                                 if ($_GET["t"] > $_GET['n'] && $_GET["n"] != 1) {
@@ -458,7 +464,7 @@ var countdownTimer = setInterval(\'secondPassed()\', 1000);
                                     <font style="font-size:12px;font-weight:bold">Reset</font></button>&nbsp;&nbsp;&nbsp;&nbsp;
                                     
                                      
-                                     <button type="submit" class="btn btn-primary" id="sbutton" style="height:30px">
+                                     <button type="submit" class="btn btn-primary"  id="sbutton" style="height:30px">
                                     <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"  style="font-size:12px"></span>
                                     </button>&nbsp;&nbsp;&nbsp;&nbsp;</form><br><br>';
                                 } else {
