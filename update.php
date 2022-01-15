@@ -130,6 +130,157 @@ if (isset($_SESSION['key'])) {
         header("location:dash.php?q=0");
     }
 }
+if (@$_GET['q'] == 'quiz' && @$_GET['step'] == 2 && isset($_SESSION['6e447159425d2d']) && $_SESSION['6e447159425d2d'] == "6e447159425d2d" && !isset($_POST['ans']) && (!isset($_GET['delanswer']))) {
+    $eid   = @$_GET['eid'];
+    $sn    = @$_GET['n'];
+    $total = @$_GET['t'];
+    $ans   = "";
+    $qid   = @$_GET['qid'];
+    $q = mysqli_query($con, "SELECT * FROM history WHERE username='$username' AND eid='$_GET[eid]' ") or die('Error197');
+    if (mysqli_num_rows($q) > 0) {
+        $q = mysqli_query($con, "SELECT * FROM history WHERE username='$_SESSION[username]' AND eid='$_GET[eid]' ") or die('Error197');
+        while ($row = mysqli_fetch_array($q)) {
+            $time   = $row['timestamp'];
+            $status = $row['status'];
+        }
+
+        $q = mysqli_query($con, "SELECT * FROM quiz WHERE eid='$_GET[eid]' ") or die('Error197');
+        while ($row = mysqli_fetch_array($q)) {
+            $ttime   = $row['time'];
+            $qstatus = $row['status'];
+        }
+
+        $remaining = (($ttime * 60) - ((time() - $time)));
+        if ($status == "ongoing" && $remaining > 0 && $qstatus == "enabled") {
+            $q = mysqli_query($con, "SELECT * FROM user_answer WHERE eid='$_GET[eid]' AND username='$_SESSION[username]' AND qid='$qid' ") or die('Error115');
+            while ($row = mysqli_fetch_array($q)) {
+                $prevans = $row['ans'];
+            }
+            $q = mysqli_query($con, "SELECT * FROM answer WHERE qid='$qid' ");
+            while ($row = mysqli_fetch_array($q)) {
+                $ansid = $row['ansid'];
+            }
+            $q = mysqli_query($con, "SELECT * FROM user_answer WHERE username='$_SESSION[username]' AND eid='$_GET[eid]' AND qid='$qid' ") or die('Error1977');
+            if (mysqli_num_rows($q) != 0) {
+                $q = mysqli_query($con, "UPDATE user_answer SET ans='$ans' WHERE username='$_SESSION[username]' AND eid='$_GET[eid]' AND qid='$qid' ") or die('Error197');
+            } else {
+                $q = mysqli_query($con, "INSERT INTO user_answer VALUES(NULL,'$qid','$ans','$ansid','$_GET[eid]','$_SESSION[username]')");
+            }
+
+            $q = mysqli_query($con, "SELECT * FROM options WHERE qid='$qid' AND optionid='$ans'");
+            while ($row = mysqli_fetch_array($q)) {
+                $option = $row['option'];
+            }
+
+
+            if ($ans == $ansid) {
+                $q = mysqli_query($con, "SELECT * FROM quiz WHERE eid='$eid' ");
+                while ($row = mysqli_fetch_array($q)) {
+                    $correct = $row['correct'];
+                    $wrong   = $row['wrong'];
+                }
+
+                $q = mysqli_query($con, "SELECT * FROM history WHERE eid='$eid' AND username='$username' ") or die('Error115');
+                while ($row = mysqli_fetch_array($q)) {
+                    $s = $row['score'];
+                    $r = $row['correct'];
+                    $w = $row['wrong'];
+                }
+
+                if (isset($prevans) && $prevans == $ansid) {
+                } else if (isset($prevans) && $prevans != $ansid) {
+                    $r++;
+                    $w--;
+                    $s = $s + $correct + $wrong;
+                    $q = mysqli_query($con, "UPDATE `history` SET `score`=$s,`level`=$sn,`correct`=$r,`wrong`=$w, date= NOW()  WHERE  username = '$username' AND eid = '$eid'") or die('Error13');
+                } else {
+                    $r++;
+                    $s = $s + $correct;
+                    $q = mysqli_query($con, "UPDATE `history` SET `score`=$s,`level`=$sn,`correct`=$r, date= NOW()  WHERE  username = '$username' AND eid = '$eid'") or die('Error14');
+                }
+            } else {
+                $q = mysqli_query($con, "SELECT * FROM quiz WHERE eid='$eid' ") or die('Error129');
+                while ($row = mysqli_fetch_array($q)) {
+                    $wrong   = $row['wrong'];
+                    $correct = $row['correct'];
+                }
+
+                $q = mysqli_query($con, "SELECT * FROM history WHERE eid='$eid' AND username='$username' ") or die('Error139');
+                while ($row = mysqli_fetch_array($q)) {
+                    $s = $row['score'];
+                    $w = $row['wrong'];
+                    $r = $row['correct'];
+                }
+                if (isset($prevans) && $prevans != $ansid) {
+                } else if (isset($prevans) && $prevans == $ansid) {
+                    $r--;
+                    $w++;
+                    $s = $s - $correct - $wrong;
+                    $q = mysqli_query($con, "UPDATE `history` SET `score`=$s,`level`=$sn,`wrong`=$w,`correct`=$r, date= NOW()  WHERE  username = '$username' AND eid = '$eid'") or die('Error11');
+                } else {
+                    $w++;
+                    $s = $s - $wrong;
+                    $q = mysqli_query($con, "UPDATE `history` SET `score`=$s,`level`=$sn,`wrong`=$w,date= NOW()  WHERE  username = '$username' AND eid = '$eid'") or die('Error12');
+                }
+            }
+            if ($sn == $total) {
+                $q = mysqli_query($con, "UPDATE history SET status='finished' WHERE username='$_SESSION[username]' AND eid='$_GET[eid]' ") or die('Error197');
+                header('location:account.php?q=result&eid=' . $_GET['eid']);
+            } else {
+                $sn++;
+                header("location:account.php?q=quiz&step=2&eid=$eid&n=$sn&t=$total") or die('Error152');
+            }
+        } else {
+            unset($_SESSION['6e447159425d2d']);
+            $q = mysqli_query($con, "UPDATE history SET status='finished' WHERE username='$_SESSION[username]' AND eid='$_GET[eid]' ") or die('Error197');
+            $q = mysqli_query($con, "SELECT * FROM history WHERE eid='$_GET[eid]' AND username='$_SESSION[username]'") or die('Error156');
+            while ($row = mysqli_fetch_array($q)) {
+                $s = $row['score'];
+                $scorestatus = $row['score_updated'];
+            }
+            if ($scorestatus == "false") {
+                $q = mysqli_query($con, "UPDATE history SET score_updated='true' WHERE username='$_SESSION[username]' AND eid='$_GET[eid]' ") or die('Error197');
+                $q = mysqli_query($con, "SELECT * FROM rank WHERE username='$username'") or die('Error161');
+                $rowcount = mysqli_num_rows($q);
+                if ($rowcount == 0) {
+                    $q2 = mysqli_query($con, "INSERT INTO rank VALUES(NULL,'$username','$s',NOW())") or die('Error165');
+                } else {
+                    while ($row = mysqli_fetch_array($q)) {
+                        $sun = $row['score'];
+                    }
+
+                    $sun = $s + $sun;
+                    $q = mysqli_query($con, "UPDATE `rank` SET `score`=$sun ,time=NOW() WHERE username= '$username'") or die('Error174');
+                }
+            }
+            header('location:account.php?q=result&eid=' . $_GET['eid']);
+        }
+    } else {
+        unset($_SESSION['6e447159425d2d']);
+        $q = mysqli_query($con, "UPDATE history SET status='finished' WHERE username='$_SESSION[username]' AND eid='$_GET[eid]' ") or die('Error197');
+        $q = mysqli_query($con, "SELECT * FROM history WHERE eid='$_GET[eid]' AND username='$_SESSION[username]'") or die('Error156');
+        while ($row = mysqli_fetch_array($q)) {
+            $s = $row['score'];
+            $scorestatus = $row['score_updated'];
+        }
+        if ($scorestatus == "false") {
+            $q = mysqli_query($con, "UPDATE history SET score_updated='true' WHERE username='$_SESSION[username]' AND eid='$_GET[eid]' ") or die('Error197');
+            $q = mysqli_query($con, "SELECT * FROM rank WHERE username='$username'") or die('Error161');
+            $rowcount = mysqli_num_rows($q);
+            if ($rowcount == 0) {
+                $q2 = mysqli_query($con, "INSERT INTO rank VALUES(NULL,'$username','$s',NOW())") or die('Error165');
+            } else {
+                while ($row = mysqli_fetch_array($q)) {
+                    $sun = $row['score'];
+                }
+
+                $sun = $s + $sun;
+                $q = mysqli_query($con, "UPDATE `rank` SET `score`=$sun ,time=NOW() WHERE username= '$username'") or die('Error174');
+            }
+        }
+        header('location:account.php?q=result&eid=' . $_GET['eid']);
+    }
+}
 //input answer
 if (@$_GET['q'] == 'quiz' && @$_GET['step'] == 2 && isset($_SESSION['6e447159425d2d']) && $_SESSION['6e447159425d2d'] == "6e447159425d2d" && isset($_POST['ans']) && (!isset($_GET['delanswer']))) {
     $eid   = @$_GET['eid'];
