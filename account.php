@@ -7,14 +7,70 @@
 
 <title>Skill's Breaker</title>
 <link  rel="stylesheet" href="css/bootstrap.min.css"/>
- <link  rel="stylesheet" href="css/bootstrap-theme.min.css"/>    
- <link rel="stylesheet" href="css/main.css">
- <link  rel="stylesheet" href="css/font.css">
- <script src="js/jquery.js" type="text/javascript"></script>
-
- 
-  <script src="js/bootstrap.min.js"  type="text/javascript"></script>
+<link  rel="stylesheet" href="css/bootstrap-theme.min.css"/>    
+<link  rel="stylesheet" href="css/font.css">
+<link rel="stylesheet" href="css/main.css">
+<script src="js/jquery.js" type="text/javascript"></script>
+<script src="js/bootstrap.min.js"  type="text/javascript"></script>
 <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'>
+	
+<script>
+function validateForm() {
+  var y = document.forms["form"]["name"].value; 
+  if (y == null || y == "") {
+    document.getElementById("errormsg").innerHTML="Name must be filled out.";
+    return false;
+  }
+  var br = document.forms["form"]["branch"].value;
+  if (br == "") {
+    document.getElementById("errormsg").innerHTML="Please select your branch";
+    return false;
+  }
+  if (m.length < 10) {
+    document.getElementById("errormsg").innerHTML="Passwords must be 12 digits long";
+    return false;
+  }
+  var g = document.forms["form"]["gender"].value;
+  if (g=="") {
+    document.getElementById("errormsg").innerHTML="Please select your gender";
+    return false;
+  }
+  var clr = document.forms["form"]["clrname"].value;
+  if (clr=="") {
+    document.getElementById("errormsg").innerHTML="Please select Colourblind Status";
+    return false;
+  }
+  var x = document.forms["form"]["username"].value;
+  if (x.length == 0) {
+    document.getElementById("errormsg").innerHTML="Please enter a valid username";
+    return false;
+  }
+  if (x.length < 4) {
+    document.getElementById("errormsg").innerHTML="Username must be at least 4 characters long";
+    return false;
+  }
+  var m = document.forms["form"]["phno"].value;
+  if (m.length != 10) {
+    document.getElementById("errormsg").innerHTML="Phone number must be 10 digits long";
+    return false;
+  }
+  var a = document.forms["form"]["password"].value;
+  if(a == null || a == ""){
+    document.getElementById("errormsg").innerHTML="Password must be filled out";
+    return false;
+  }
+  if(a.length<4 || a.length>15){
+    document.getElementById("errormsg").innerHTML="Passwords must be 4 to 15 characters long.";
+    return false;
+  }
+  var b = document.forms["form"]["cpassword"].value;
+  if (a!=b){
+    document.getElementById("errormsg").innerHTML="Passwords must match.";
+    return false;
+  }
+}
+</script>
+	
 <?php
 if (@$_GET['w']) {
     echo '<script>alert("' . @$_GET['w'] . '");</script>';
@@ -26,6 +82,9 @@ if (@$_GET['w']) {
 include_once 'dbConnection.php';
 ?>
 <body>
+
+
+
 <div class="header">
 <div class="row">
 <div class="col-lg-6">
@@ -71,8 +130,11 @@ if (@$_GET['q'] == 2)
     <li <?php
 if (@$_GET['q'] == 3)
     echo 'class="active"';
-?>><a href="account.php?q=3"><span class="glyphicon glyphicon-stats" aria-hidden="true"></span>&nbsp;Leaderboard</a></li></ul>
-            
+?>><a href="account.php?q=3"><span class="glyphicon glyphicon-stats" aria-hidden="true"></span>&nbsp;Leaderboard</a></li>
+	<li <?php
+if (@$_GET['q'] == 4)
+    echo 'class="active"';
+?>><a href="account.php?q=4"><span class="glyphicon glyphicon-stats" aria-hidden="true"></span>&nbsp;Profile Setting</a></li></ul>            
       </div>
   </div>
 </nav>
@@ -143,6 +205,7 @@ if (@$_GET['q'] == 1) {
     
 }
 ?>
+
 <?php
 if (@$_GET['q'] == 'quiz' && @$_GET['step'] == 2 && isset($_SESSION['6e447159425d2d']) && $_SESSION['6e447159425d2d'] == "6e447159425d2d" && isset($_GET['endquiz'])== 'end') {
     unset($_SESSION['6e447159425d2d']);
@@ -167,7 +230,7 @@ if (@$_GET['q'] == 'quiz' && @$_GET['step'] == 2 && isset($_SESSION['6e447159425
                         $q = mysqli_query($con, "UPDATE `rank` SET `score`=$sun ,time=NOW() WHERE username= '$username'") or die('Error174');
                     }
                 }
-            header('location:account.php?q=result&eid=' . $_GET['eid']);
+            header('location:account.php?q=result&eid=' . $_GET[eid]);
 }
 
 if (@$_GET['q'] == 'quiz' && @$_GET['step'] == 2 && isset($_GET['start']) && $_GET['start'] == "start" && (!isset($_SESSION['6e447159425d2d']))) {
@@ -179,7 +242,7 @@ if (@$_GET['q'] == 'quiz' && @$_GET['step'] == 2 && isset($_GET['start']) && $_G
             $timel  = $row['timestamp'];
             $status = $row['status'];
         }
-        $q = mysqli_query($con, "SELECT * FROM quiz WHERE eid='$_GET[seid]' ") or die('Error197');
+        $q = mysqli_query($con, "SELECT * FROM quiz WHERE eid='$_GET[eid]' ") or die('Error197');
         while ($row = mysqli_fetch_array($q)) {
             $ttimel  = $row['time'];
             $qstatus = $row['status'];
@@ -187,7 +250,7 @@ if (@$_GET['q'] == 'quiz' && @$_GET['step'] == 2 && isset($_GET['start']) && $_G
         $remaining = (($ttimel * 60) - ((time() - $timel)));
         if ($status == "ongoing" && $remaining > 0 && $qstatus == "enabled") {
             $_SESSION['6e447159425d2d'] = "6e447159425d2d";
-            header('location:account.php?q=quiz&step=2&eid=' . $_GET['eid'] . '&n=' . $_GET[n] . '&t=' . $_GET[t]);
+            header('location:account.php?q=quiz&step=2&eid=' . $_GET[eid] . '&n=' . $_GET[n] . '&t=' . $_GET[t]);
             
         } else {
                 $q = mysqli_query($con, "UPDATE history SET status='finished' WHERE username='$_SESSION[username]' AND eid='$_GET[eid]' ") or die('Error197');
@@ -211,7 +274,7 @@ if (@$_GET['q'] == 'quiz' && @$_GET['step'] == 2 && isset($_GET['start']) && $_G
                         $q = mysqli_query($con, "UPDATE `rank` SET `score`=$sun ,time=NOW() WHERE username= '$username'") or die('Error174');
                     }
                 }
-            header('location:account.php?q=result&eid=' . $_GET['eid']);
+            header('location:account.php?q=result&eid=' . $_GET[eid]);
         }
         
     } else {
@@ -285,12 +348,22 @@ var countdownTimer = setInterval(\'secondPassed()\', 1000);
             $eid   = @$_GET['eid'];
             $sn    = @$_GET['n'];
             $total = @$_GET['t'];
-            $q     = mysqli_query($con, "SELECT * FROM questions WHERE eid='$eid' AND sn='$sn' ");
+            $clrblindname = "";
+            $q = mysqli_query($con, "SELECT * FROM user WHERE username='$_SESSION[username]'");
+            while($row = mysqli_fetch_array($q)){
+                $clrblindname = $row['clrname'];
+            }
             echo '<div class="panel" style="margin-right:5%;margin-left:5%;margin-top:10px;border-radius:10px">';
+            $q     = mysqli_query($con, "SELECT * FROM questions WHERE eid='$eid' AND sn='$sn' ");
             while ($row = mysqli_fetch_array($q)) {
                 $qns = stripslashes($row['qns']);
                 $qid = $row['qid'];
-                echo '<b><pre style="background-color:white"><div style="font-size:20px;font-weight:bold;font-family:calibri;margin:10px">' . $sn . ' : ' . $qns . '</div></pre></b>';
+                echo '<b><pre style="background-color:white"><div style="font-size:20px;font-weight:bold;font-family:calibri;margin:10px">' . $sn . ' : ' . $qns . '</div>';
+                $img = $row['image'];
+                if(!empty($img)){
+                    echo '<img class="'.$clrblindname.'" src="uploads/'.$img.'" style="width:300px"/>';
+                }
+                echo '</pre></b>';
             }
             
             echo '<form id="qform" action="update.php?q=quiz&step=2&eid=' . $eid . '&n=' . $sn . '&t=' . $total . '&qid=' . $qid . '" method="POST"  class="form-horizontal">
@@ -371,7 +444,7 @@ var countdownTimer = setInterval(\'secondPassed()\', 1000);
                         $q = mysqli_query($con, "UPDATE `rank` SET `score`=$sun ,time=NOW() WHERE username= '$username'") or die('Error174');
                     }
                 }
-            header('location:account.php?q=result&eid=' . $_GET['eid']);
+            header('location:account.php?q=result&eid=' . $_GET[eid]);
         }
     } else {
         unset($_SESSION['6e447159425d2d']);
@@ -396,7 +469,7 @@ var countdownTimer = setInterval(\'secondPassed()\', 1000);
                         $q = mysqli_query($con, "UPDATE `rank` SET `score`=$sun ,time=NOW() WHERE username= '$username'") or die('Error174');
                     }
                 }
-            header('location:account.php?q=result&eid=' . $_GET['eid']);
+            header('location:account.php?q=result&eid=' . $_GET[eid]);
     }
 }
 if (@$_GET['q'] == 'result' && @$_GET['eid']) {
@@ -506,12 +579,18 @@ if (@$_GET['q'] == 3) {
         $showfrom = 1;
         $showtill = 10;
     }
-    $q = mysqli_query($con, "SELECT * FROM rank") or die('Error223');
+    $q = mysqli_query($con, "SELECT * FROM rank");
+    
     echo '<div class="panel title">
 <table class="table table-striped title1" >
 <tr><td style="vertical-align:middle"><b>Rank</b></td><td style="vertical-align:middle"><b>Name</b></td><td style="vertical-align:middle"><b>Branch</b></td><td style="vertical-align:middle"><b>Username</b></td><td style="vertical-align:middle"><b>Score</b></td></tr>';
     $c = $showfrom-1;
-    $total = mysqli_num_rows($q);
+    if(empty($q)){
+        $total = 0;
+    }
+    else {
+        $total = mysqli_num_rows($q);
+    }
     if($total >= $showfrom){
         $q = mysqli_query($con, "SELECT * FROM rank ORDER BY score DESC, time ASC LIMIT ".($showfrom-1).",10") or die('Error223');
         while ($row = mysqli_fetch_array($q)) {
@@ -568,12 +647,336 @@ if (@$_GET['q'] == 3) {
     }
     echo '</tr></table></div>';
 }
+if (@$_GET['q'] == 4) {
+	?>
+	<div class="row">
+<div class="col-md-7 panel"> 
+  <form class="form-horizontal" name="form" action="sign.php?q=account.php" onSubmit="return validateForm()" method="POST">
+<fieldset>
+<div class="form-group">
+  <label class="col-md-12 control-label" for="name"></label>  
+  <div class="col-md-12">
+  <h3 align="center">Registration Form</h3>
+    
+  </div>
+</div>
+
+<div class="form-group">
+  <label class="col-md-12 control-label" for="name"></label>  
+  <div class="col-md-12">
+  <div id="errormsg" style="font-size:14px;font-family:calibri;font-weight:normal;color:red"><?php
+if (@$_GET['q7']) {
+    echo '<p style="color:red;font-size:15px;">' . @$_GET['q7'];
+}
+?></div>
+    
+  </div>
+</div>
+<div class="form-group">
+  <label class="col-md-12 control-label" for="name"></label>  
+  <div class="col-md-12">
+  <input id="name" name="name" placeholder="Enter your name" class="form-control input-md" type="text" value="<?php
+if (isset($_GET['name']))
+{
+echo $_GET['name'];
+}?>">
+    
+  </div>
+</div>
+<div class="form-group">
+  <label class="col-md-12 control-label" for="rollno"></label>  
+  <div class="col-md-12">
+  <input id="rollno" name="rollno" placeholder="Enter your Roll no (Ex.732116104***)" class="form-control input-md" type="text" value="<?php
+if (isset($_GET['rollno']))
+{
+echo $_GET['rollno'];
+}?>">
+    
+  </div>
+</div>
+<div class="form-group">
+  <label class="col-md-12 control-label" for="gender"></label>
+  <div class="col-md-12">
+    <select id="gender" name="gender" placeholder="Select your gender" class="form-control input-md" >
+   <option value="" <?php
+if (!isset($_GET['gender']))
+    echo "selected";
+?>>Select Gender</option>
+  <option value="M" <?php
+  if (isset($_GET['gender']))
+  {
+if ($_GET['gender'] == "M")
+    echo "selected";
+  }
+?>>Male</option>
+  <option value="F" <?php
+  if (isset($_GET['gender']))
+  {
+if ($_GET['gender'] == "F")
+    echo "selected";
+  }
+?>>Female</option> </select>
+  </div>
+</div>
+<div class="form-group">
+  <label class="col-md-12 control-label" for="branch"></label>
+  <div class="col-md-12">
+    <select id="branch" name="branch" placeholder="Select your branch" class="form-control input-md" >
+   <option value="" <?php
+if (!isset($_GET['branch']))
+    echo "selected";
+?>>Select Branch</option>
+  <option value="CSE" <?php
+  if (isset($_GET['branch']))
+  {
+if ($_GET['branch'] == "CSE")
+    echo "selected";
+  }
+  ?>>Computer Science and Engineering</option>
+  <option value="ECE" <?php
+  if (isset($_GET['branch']))
+  {
+if ($_GET['branch'] == "ECE")
+    echo "selected";
+  }
+?>>Electronics and Communication Engineering</option>
+  <option value="EEE" <?php
+  if (isset($_GET['branch']))
+  {
+if ($_GET['branch'] == "EEE")
+    echo "selected";
+  }
+?>>Electrical and Electronics Engineering</option>
+  <option value="IT" <?php
+  if (isset($_GET['branch']))
+  {
+  if ($_GET['branch'] == "IT")
+    echo "selected";
+  }
+?>>Information Technology</option>
+  <option value="CHEM" <?php
+  if (isset($_GET['branch']))
+  {
+if ($_GET['branch'] == "CHEM")
+    echo "selected";
+  }
+?>>Chemical Engineering</option>
+  <option value="CIVIL" <?php
+  if (isset($_GET['branch']))
+  {
+if ($_GET['branch'] == "CIVIL")
+    echo "selected";
+  }
+?>>Civil Engineering</option> 
+  <option value="MECH" <?php
+  if (isset($_GET['branch']))
+  {
+if ($_GET['branch'] == "MECH")
+    echo "selected";
+  }
+?>>Mechanical Engineering</option> 
+  <option value="BIOTECH" <?php
+  if (isset($_GET['branch']))
+  {
+if ($_GET['branch'] == "BIOTECH")
+    echo "selected";
+  }
+?>>Biotechnology</option> 
+  <option value="IMSC" <?php
+  if (isset($_GET['branch']))
+  {
+if ($_GET['branch'] == "IMSC")
+    echo "selected";
+  }
+?>>Integrated MSc</option> </select>
+  </input>
+  </div>
+</div>
+
+<div class="form-group">
+  <label class="col-md-12 control-label" for="clrname"></label>
+  <div class="col-md-12">
+    <select id="clrname" name="clrname" placeholder="Choose Colour Blind Status" class="form-control input-md" >
+   <option value="" <?php
+if (!isset($_GET['clrname']))
+    echo "selected";
+?>>Choose Colour Blind Status</option>
+  <option value="Normal" <?php
+  if (isset($_GET['clrname']))
+  {
+if ($_GET['clrname'] == "Normal")
+    echo "selected";
+  }
+?>>Normal</option>
+  
+  <option value="Protanopia" <?php
+  if (isset($_GET['clrname']))
+  {
+if ($_GET['clrname'] == "Protanopia")
+    echo "selected";
+  }
+?>>Protanopia</option>
+
+<option value="Deuteranopia" <?php
+  if (isset($_GET['clrname']))
+  {
+if ($_GET['clrname'] == "Deuteranopia")
+    echo "selected";
+  }
+?>>Deuteranopia</option>
+
+<option value="Tritanopia" <?php
+  if (isset($_GET['clrname']))
+  {
+if ($_GET['clrname'] == "Tritanopia")
+    echo "selected";
+  }
+?>>Tritanopia</option>
+
+
+
+  </select>
+  </div>
+</div>
+
+<div class="form-group">
+  <label class="col-md-12 control-label title1" for="username"></label>
+  <div class="col-md-12">
+    <input id="username" name="username" placeholder="Choose a username" class="form-control input-md" type="username" value="<?php
+if (isset($_GET['username']))
+{
+echo $_GET['username'];
+};
+?>" style="<?php
+if (isset($_GET['q7']))
+    echo "border-color:red";
+?>">
+
+  </div>
+</div>
+<div class="form-group">
+  <label class="col-md-12 control-label" for="phno"></label>  
+  <div class="col-md-12">
+  <input id="phno" name="phno" placeholder="Enter your mobile number" class="form-control input-md" type="number" value="<?php
+if (isset($_GET['phno']))
+{
+echo $_GET['phno'];
+}
+?>">
+    
+  </div>
+</div>
+<div class="form-group">
+  <label class="col-md-12 control-label" for="password"></label>
+  <div class="col-md-12">
+    <input id="password" name="password" placeholder="Enter your password" class="form-control input-md" type="password">
+    
+  </div>
+</div>
+
+<div class="form-group">
+  <label class="col-md-12control-label" for="cpassword"></label>
+  <div class="col-md-12">
+    <input id="cpassword" name="cpassword" placeholder="Confirm Password" class="form-control input-md" type="password">
+    
+  </div>
+</div>
+<div class="form-group">
+  <label class="col-md-12 control-label" for=""></label>
+  <div class="col-md-12" style="text-align: center"> 
+    <input  type="submit" value=" Register Now " class="btn btn-primary" style="text-align:center" />
+  </div>
+</div>
+
+</fieldset>
+</form>
+</div>
+</div>
+    
+<?php }
 ?>
 </div></div></div></div>
+	<svg
+  xmlns="http://www.w3.org/2000/svg"
+  version="1.1">
+  <defs>
+    <filter id="protanopia">
+      <feColorMatrix
+        in="SourceGraphic"
+        type="matrix"
+        values="0.567, 0.433, 0,     0, 0
+                0.558, 0.442, 0,     0, 0
+                0,     0.242, 0.758, 0, 0
+                0,     0,     0,     1, 0"/>
+    </filter>
+    <filter id="protanomaly">
+      <feColorMatrix
+        in="SourceGraphic"
+        type="matrix"
+        values="0.817, 0.183, 0,     0, 0
+                0.333, 0.667, 0,     0, 0
+                0,     0.125, 0.875, 0, 0
+                0,     0,     0,     1, 0"/>
+    </filter>
+    <filter id="deuteranopia">
+      <feColorMatrix
+        in="SourceGraphic"
+        type="matrix"
+        values="0.625, 0.375, 0,   0, 0
+                0.7,   0.3,   0,   0, 0
+                0,     0.3,   0.7, 0, 0
+                0,     0,     0,   1, 0"/>
+    </filter>
+    <filter id="deuteranomaly">
+      <feColorMatrix
+        in="SourceGraphic"
+        type="matrix"
+        values="0.8,   0.2,   0,     0, 0
+                0.258, 0.742, 0,     0, 0
+                0,     0.142, 0.858, 0, 0
+                0,     0,     0,     1, 0"/>
+    </filter>
+    <filter id="tritanopia">
+      <feColorMatrix
+        in="SourceGraphic"
+        type="matrix"
+        values="0.95, 0.05,  0,     0, 0
+                0,    0.433, 0.567, 0, 0
+                0,    0.475, 0.525, 0, 0
+                0,    0,     0,     1, 0"/>
+    </filter>
+    <filter id="tritanomaly">
+      <feColorMatrix
+        in="SourceGraphic"
+        type="matrix"
+        values="0.967, 0.033, 0,     0, 0
+                0,     0.733, 0.267, 0, 0
+                0,     0.183, 0.817, 0, 0
+                0,     0,     0,     1, 0"/>
+    </filter>
+    <filter id="achromatopsia">
+      <feColorMatrix
+        in="SourceGraphic"
+        type="matrix"
+        values="0.299, 0.587, 0.114, 0, 0
+                0.299, 0.587, 0.114, 0, 0
+                0.299, 0.587, 0.114, 0, 0
+                0,     0,     0,     1, 0"/>
+    </filter>
+    <filter id="achromatomaly">
+      <feColorMatrix
+        in="SourceGraphic"
+        type="matrix"
+        values="0.618, 0.320, 0.062, 0, 0
+                0.163, 0.775, 0.062, 0, 0
+                0.163, 0.320, 0.516, 0, 0
+                0,     0,     0,     1, 0"/>
+    </filter>
+  </defs>
+</svg>
 <div class="row footer">
- <div class="col-md-2 box"></div>
-<div class="col-md-3 box">
-<a href="#" data-toggle="modal" data-target="#developers" s style="color:lightyellow;" onmouseover="this.style('color:yellow')" target="new">Organized by Muki InfoTech,Erode</a>
+<div class="col-md-7 box">
+<a href="#" data-toggle="modal" data-target="#developers" s style="color:lightyellow;" onmouseover="this.style('color:yellow')" target="new">Organized by Muki | Maintenance and Evolution by SME Group 4 (University of Malaya)</a>
 </div>
 <!-- Modal For Developers-->
 <div class="modal fade title1" id="developers">
@@ -581,28 +984,33 @@ if (@$_GET['q'] == 3) {
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h4 class="modal-title" style="font-family:'typo' "><span style="color:orange">Muki InfoTech</span></h4>
+        <h4 class="modal-title" style="font-family:'typo' "><span style="color:orange">Developers Information</span></h4>
       </div>
 	  
       <div class="modal-body">
         <p>
 		<div class="row">
-		<div class="col-md-4">
-		 <img src="image/muki.jpg" width=100 height=100 alt="Mugunthan" class="img-rounded">
-		 </div>
-		 <div class="col-md-5">
-		<a href="" style="color:#202020; font-family:'typo' ; font-size:18px" title="">Muki Infotech</a>
+		<div class="col-md-6">
+		<a href="" style="color:#202020;font-size:18px" title="">Muki Infotech</a>
 		<h4 style="color:#202020; font-family:'typo' ;font-size:16px" class="title1">+91 9514444471</h4>
 		<h4 style="font-family:'typo' ">mugunthkumar99@gmail.com</h4>
-		<h4 style="font-family:'typo' ">Nandha College of Technology ,Erode </h4></div></div>
+		<h4 style="font-family:'typo' ">Nandha College of Technology ,Erode </h4></div>
+		<div class="col-md-6">
+		<a href="" style="color:#202020;font-size:18px" title="">University of Malaya</a>
+		<h4 class="title1"><a href="https://github.com/aifanshahran" style="color:#202020; font-family:'typo';font-size:16px">Developer 1: Mohamad Aiman</a></h4>
+		<h4 style="color:#202020; font-family:'typo' ;font-size:16px" class="title1">Developer 2: Amirul Mukminin</h4>
+		<h4 style="color:#202020; font-family:'typo' ;font-size:16px" class="title1">Developer 3: Farhan Sadiq</h4>
+		<h4 style="color:#202020; font-family:'typo' ;font-size:16px" class="title1">Developer 4: Nurin Arina</h4>
+		<h4 style="color:#202020; font-family:'typo' ;font-size:16px" class="title1">Developer 5: Nur Hazirah</h4>
+		<h4 style="color:#202020; font-family:'typo' ;font-size:16px" class="title1">Developer 6: Songyuxuan</h4>
+		<h4 style="font-family:'typo' ">University of Malaya, KL </h4></div>
+		</div>
 		</p>
       </div>
     
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-<div class="col-md-2 box">
-<a href="feedback.php" style="color:lightyellow;text-decoration:underline" onmouseover="this.style('color:yellow')" target="new">Feedback</a></div>
 
 </body>
 </html>

@@ -4,6 +4,7 @@ ob_start();
 $name     = $_POST['name'];
 $name     = ucwords(strtolower($name));
 $gender   = $_POST['gender'];
+$clrname   = $_POST['clrname'];
 $username = $_POST['username'];
 $phno     = $_POST['phno'];
 $password = $_POST['password'];
@@ -14,6 +15,8 @@ $name     = addslashes($name);
 $name     = ucwords(strtolower($name));
 $gender   = stripslashes($gender);
 $gender   = addslashes($gender);
+$clrname   = stripslashes($clrname);
+$clrname   = addslashes($clrname);
 $username = stripslashes($username);
 $username = addslashes($username);
 $phno     = stripslashes($phno);
@@ -22,7 +25,7 @@ $password = stripslashes($password);
 $password = addslashes($password);
 $password = md5($password);
 
-$q3 = mysqli_query($con, "INSERT INTO user VALUES  (NULL,'$name', '$rollno','$branch','$gender' ,'$username' ,'$phno', '$password')");
+$q3 = mysqli_query($con, "INSERT INTO user VALUES  (NULL,'$name', '$rollno','$branch','$gender' ,'$username' ,'$phno', '$password', '$clrname')");
 if ($q3) {
     session_start();
     $_SESSION["username"] = $username;
