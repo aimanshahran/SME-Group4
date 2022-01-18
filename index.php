@@ -50,11 +50,6 @@ function validateForm() {
     document.getElementById("errormsg").innerHTML="Please select your gender";
     return false;
   }
-  var clr = document.forms["form"]["clrname"].value;
-  if (clr=="") {
-    document.getElementById("errormsg").innerHTML="Please select Colourblond Status";
-    return false;
-  }
   var x = document.forms["form"]["username"].value;
   if (x.length == 0) {
     document.getElementById("errormsg").innerHTML="Please enter a valid username";
@@ -277,53 +272,6 @@ if ($_GET['branch'] == "IMSC")
   </input>
   </div>
 </div>
-
-<div class="form-group">
-  <label class="col-md-12 control-label" for="clrname"></label>
-  <div class="col-md-12">
-    <select id="clrname" name="clrname" placeholder="Choose Colour Blind Status" class="form-control input-md" >
-   <option value="" <?php
-if (!isset($_GET['clrname']))
-    echo "selected";
-?>>Choose Colour Blind Status</option>
-  <option value="Normal" <?php
-  if (isset($_GET['clrname']))
-  {
-if ($_GET['clrname'] == "Normal")
-    echo "selected";
-  }
-?>>Normal</option>
-  
-  <option value="Protanopia" <?php
-  if (isset($_GET['clrname']))
-  {
-if ($_GET['clrname'] == "Protanopia")
-    echo "selected";
-  }
-?>>Protanopia</option>
-
-<option value="Deuteranopia" <?php
-  if (isset($_GET['clrname']))
-  {
-if ($_GET['clrname'] == "Deuteranopia")
-    echo "selected";
-  }
-?>>Deuteranopia</option>
-
-<option value="Tritanopia" <?php
-  if (isset($_GET['clrname']))
-  {
-if ($_GET['clrname'] == "Tritanopia")
-    echo "selected";
-  }
-?>>Tritanopia</option>
-
-
-
-  </select>
-  </div>
-</div>
-
 <div class="form-group">
   <label class="col-md-12 control-label title1" for="username"></label>
   <div class="col-md-12">

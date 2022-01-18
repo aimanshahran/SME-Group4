@@ -37,17 +37,3 @@ hr{color:#000000;}
 .funkyradio input[type="checkbox"]:checked ~ label:before {content: '\2714';text-indent: .9em;color: #333;background-color: #ccc;}
 .funkyradio input[type="radio"]:focus ~ label:before,.funkyradio input[type="checkbox"]:focus ~ label:before {box-shadow: 0 0 0 3px #999;}
 .funkyradio-success input[type="radio"]:checked ~ label:before,.funkyradio-success input[type="checkbox"]:checked ~ label:before {color: #fff;background-color: #5cb85c;}
-
-
-
-.Tritanopia{
-    filter: url(#tritanopia);
-  }
-
-.Protanopia{
-    filter:url(#protanopia);
-}
-
-.Deuteranopia{
-    filter:url(#deuteranopia);
-}

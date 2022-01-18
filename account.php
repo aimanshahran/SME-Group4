@@ -8,8 +8,8 @@
 <title>Skill's Breaker</title>
 <link  rel="stylesheet" href="css/bootstrap.min.css"/>
  <link  rel="stylesheet" href="css/bootstrap-theme.min.css"/>    
- <link  rel="stylesheet" href="css/font.css">
  <link rel="stylesheet" href="css/main.css">
+ <link  rel="stylesheet" href="css/font.css">
  <script src="js/jquery.js" type="text/javascript"></script>
 
  
@@ -26,7 +26,6 @@ if (@$_GET['w']) {
 include_once 'dbConnection.php';
 ?>
 <body>
-
 <div class="header">
 <div class="row">
 <div class="col-lg-6">
@@ -144,7 +143,6 @@ if (@$_GET['q'] == 1) {
     
 }
 ?>
-
 <?php
 if (@$_GET['q'] == 'quiz' && @$_GET['step'] == 2 && isset($_SESSION['6e447159425d2d']) && $_SESSION['6e447159425d2d'] == "6e447159425d2d" && isset($_GET['endquiz'])== 'end') {
     unset($_SESSION['6e447159425d2d']);
@@ -169,7 +167,7 @@ if (@$_GET['q'] == 'quiz' && @$_GET['step'] == 2 && isset($_SESSION['6e447159425
                         $q = mysqli_query($con, "UPDATE `rank` SET `score`=$sun ,time=NOW() WHERE username= '$username'") or die('Error174');
                     }
                 }
-            header('location:account.php?q=result&eid=' . $_GET[eid]);
+            header('location:account.php?q=result&eid=' . $_GET['eid']);
 }
 
 if (@$_GET['q'] == 'quiz' && @$_GET['step'] == 2 && isset($_GET['start']) && $_GET['start'] == "start" && (!isset($_SESSION['6e447159425d2d']))) {
@@ -181,7 +179,7 @@ if (@$_GET['q'] == 'quiz' && @$_GET['step'] == 2 && isset($_GET['start']) && $_G
             $timel  = $row['timestamp'];
             $status = $row['status'];
         }
-        $q = mysqli_query($con, "SELECT * FROM quiz WHERE eid='$_GET[eid]' ") or die('Error197');
+        $q = mysqli_query($con, "SELECT * FROM quiz WHERE eid='$_GET[seid]' ") or die('Error197');
         while ($row = mysqli_fetch_array($q)) {
             $ttimel  = $row['time'];
             $qstatus = $row['status'];
@@ -189,7 +187,7 @@ if (@$_GET['q'] == 'quiz' && @$_GET['step'] == 2 && isset($_GET['start']) && $_G
         $remaining = (($ttimel * 60) - ((time() - $timel)));
         if ($status == "ongoing" && $remaining > 0 && $qstatus == "enabled") {
             $_SESSION['6e447159425d2d'] = "6e447159425d2d";
-            header('location:account.php?q=quiz&step=2&eid=' . $_GET[eid] . '&n=' . $_GET[n] . '&t=' . $_GET[t]);
+            header('location:account.php?q=quiz&step=2&eid=' . $_GET['eid'] . '&n=' . $_GET[n] . '&t=' . $_GET[t]);
             
         } else {
                 $q = mysqli_query($con, "UPDATE history SET status='finished' WHERE username='$_SESSION[username]' AND eid='$_GET[eid]' ") or die('Error197');
@@ -213,7 +211,7 @@ if (@$_GET['q'] == 'quiz' && @$_GET['step'] == 2 && isset($_GET['start']) && $_G
                         $q = mysqli_query($con, "UPDATE `rank` SET `score`=$sun ,time=NOW() WHERE username= '$username'") or die('Error174');
                     }
                 }
-            header('location:account.php?q=result&eid=' . $_GET[eid]);
+            header('location:account.php?q=result&eid=' . $_GET['eid']);
         }
         
     } else {
@@ -287,26 +285,12 @@ var countdownTimer = setInterval(\'secondPassed()\', 1000);
             $eid   = @$_GET['eid'];
             $sn    = @$_GET['n'];
             $total = @$_GET['t'];
-            $clrblindname = "";
-        
-            $q = mysqli_query($con, "SELECT * FROM user WHERE username='$_SESSION[username]'");
-            while($row = mysqli_fetch_array($q)){
-                $clrblindname = $row['clrname'];
-            }
-            
-            echo '<div class="panel" style="margin-right:5%;margin-left:5%;margin-top:10px;border-radius:10px">';
             $q     = mysqli_query($con, "SELECT * FROM questions WHERE eid='$eid' AND sn='$sn' ");
+            echo '<div class="panel" style="margin-right:5%;margin-left:5%;margin-top:10px;border-radius:10px">';
             while ($row = mysqli_fetch_array($q)) {
                 $qns = stripslashes($row['qns']);
                 $qid = $row['qid'];
-                echo '<b><pre style="background-color:white"><div style="font-size:20px;font-weight:bold;font-family:calibri;margin:10px">' . $sn . ' : ' . $qns . '</div>';
-                $img = $row['image'];
-                if(!empty($img)){
-                    //echo $clrblindname;
-                    echo '<img class="image '.$clrblindname.' " src="uploads/'.$img.'" style="width:500px" />';
-                    //echo '<img class="Tritanopia" src="uploads/'.$img.'" />';
-                }
-                echo '</pre></b>';
+                echo '<b><pre style="background-color:white"><div style="font-size:20px;font-weight:bold;font-family:calibri;margin:10px">' . $sn . ' : ' . $qns . '</div></pre></b>';
             }
             
             echo '<form id="qform" action="update.php?q=quiz&step=2&eid=' . $eid . '&n=' . $sn . '&t=' . $total . '&qid=' . $qid . '" method="POST"  class="form-horizontal">
@@ -387,7 +371,7 @@ var countdownTimer = setInterval(\'secondPassed()\', 1000);
                         $q = mysqli_query($con, "UPDATE `rank` SET `score`=$sun ,time=NOW() WHERE username= '$username'") or die('Error174');
                     }
                 }
-            header('location:account.php?q=result&eid=' . $_GET[eid]);
+            header('location:account.php?q=result&eid=' . $_GET['eid']);
         }
     } else {
         unset($_SESSION['6e447159425d2d']);
@@ -412,7 +396,7 @@ var countdownTimer = setInterval(\'secondPassed()\', 1000);
                         $q = mysqli_query($con, "UPDATE `rank` SET `score`=$sun ,time=NOW() WHERE username= '$username'") or die('Error174');
                     }
                 }
-            header('location:account.php?q=result&eid=' . $_GET[eid]);
+            header('location:account.php?q=result&eid=' . $_GET['eid']);
     }
 }
 if (@$_GET['q'] == 'result' && @$_GET['eid']) {
@@ -522,18 +506,12 @@ if (@$_GET['q'] == 3) {
         $showfrom = 1;
         $showtill = 10;
     }
-    $q = mysqli_query($con, "SELECT * FROM rank");
-    
+    $q = mysqli_query($con, "SELECT * FROM rank") or die('Error223');
     echo '<div class="panel title">
 <table class="table table-striped title1" >
 <tr><td style="vertical-align:middle"><b>Rank</b></td><td style="vertical-align:middle"><b>Name</b></td><td style="vertical-align:middle"><b>Branch</b></td><td style="vertical-align:middle"><b>Username</b></td><td style="vertical-align:middle"><b>Score</b></td></tr>';
     $c = $showfrom-1;
-    if(empty($q)){
-        $total = 0;
-    }
-    else {
-        $total = mysqli_num_rows($q);
-    }
+    $total = mysqli_num_rows($q);
     if($total >= $showfrom){
         $q = mysqli_query($con, "SELECT * FROM rank ORDER BY score DESC, time ASC LIMIT ".($showfrom-1).",10") or die('Error223');
         while ($row = mysqli_fetch_array($q)) {
@@ -628,81 +606,3 @@ if (@$_GET['q'] == 3) {
 
 </body>
 </html>
-<svg
-  xmlns="http://www.w3.org/2000/svg"
-  version="1.1">
-  <defs>
-    <filter id="protanopia">
-      <feColorMatrix
-        in="SourceGraphic"
-        type="matrix"
-        values="0.567, 0.433, 0,     0, 0
-                0.558, 0.442, 0,     0, 0
-                0,     0.242, 0.758, 0, 0
-                0,     0,     0,     1, 0"/>
-    </filter>
-    <filter id="protanomaly">
-      <feColorMatrix
-        in="SourceGraphic"
-        type="matrix"
-        values="0.817, 0.183, 0,     0, 0
-                0.333, 0.667, 0,     0, 0
-                0,     0.125, 0.875, 0, 0
-                0,     0,     0,     1, 0"/>
-    </filter>
-    <filter id="deuteranopia">
-      <feColorMatrix
-        in="SourceGraphic"
-        type="matrix"
-        values="0.625, 0.375, 0,   0, 0
-                0.7,   0.3,   0,   0, 0
-                0,     0.3,   0.7, 0, 0
-                0,     0,     0,   1, 0"/>
-    </filter>
-    <filter id="deuteranomaly">
-      <feColorMatrix
-        in="SourceGraphic"
-        type="matrix"
-        values="0.8,   0.2,   0,     0, 0
-                0.258, 0.742, 0,     0, 0
-                0,     0.142, 0.858, 0, 0
-                0,     0,     0,     1, 0"/>
-    </filter>
-    <filter id="tritanopia">
-      <feColorMatrix
-        in="SourceGraphic"
-        type="matrix"
-        values="0.95, 0.05,  0,     0, 0
-                0,    0.433, 0.567, 0, 0
-                0,    0.475, 0.525, 0, 0
-                0,    0,     0,     1, 0"/>
-    </filter>
-    <filter id="tritanomaly">
-      <feColorMatrix
-        in="SourceGraphic"
-        type="matrix"
-        values="0.967, 0.033, 0,     0, 0
-                0,     0.733, 0.267, 0, 0
-                0,     0.183, 0.817, 0, 0
-                0,     0,     0,     1, 0"/>
-    </filter>
-    <filter id="achromatopsia">
-      <feColorMatrix
-        in="SourceGraphic"
-        type="matrix"
-        values="0.299, 0.587, 0.114, 0, 0
-                0.299, 0.587, 0.114, 0, 0
-                0.299, 0.587, 0.114, 0, 0
-                0,     0,     0,     1, 0"/>
-    </filter>
-    <filter id="achromatomaly">
-      <feColorMatrix
-        in="SourceGraphic"
-        type="matrix"
-        values="0.618, 0.320, 0.062, 0, 0
-                0.163, 0.775, 0.062, 0, 0
-                0.163, 0.320, 0.516, 0, 0
-                0,     0,     0,     1, 0"/>
-    </filter>
-  </defs>
-</svg>
