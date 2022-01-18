@@ -401,12 +401,14 @@ var countdownTimer = setInterval(\'secondPassed()\', 1000);
                                     $row = mysqli_fetch_array($q);
                                     if ($ans != "")
                                         $ans = $row['option'];
+                                    //handle if user doesn't choose any answer    
                                     else {
                                         $ans == "";
                                     }
                                 } else {
                                     $ans = "";
                                 }
+                                //removed the answer view
                                 // if (strlen($ans) > 0) {
                                 //     echo "<font style=\"color:green;font-size:12px;font-weight:bold\">Selected answer: </font><font style=\"color:#565252;font-size:12px;\">" . $ans . "</font>&nbsp;&nbsp;<a href=update.php?q=quiz&step=2&eid=$eid&n=$sn&t=$total&qid=$qid&delanswer=delanswer><span class=\"glyphicon glyphicon-remove\" style=\"font-size:12px;color:darkred\"></span></a><br /><br />";
                                 // }
