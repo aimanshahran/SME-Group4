@@ -75,9 +75,9 @@ if (isset($_SESSION['key'])) {
         $correct = $_POST['right'];
         $wrong   = $_POST['wrong'];
         $time    = $_POST['time'];
-        $status  = "disabled";
+        $status  = "enabled";
         $id      = uniqid();
-        $q3      = mysqli_query($con, "INSERT INTO quiz VALUES(NULL,'$id','$name','$correct','$wrong','$total','$time', 'NOW()','$status')");
+        $q3      = mysqli_query($con, "INSERT INTO quiz VALUES(NULL,'$id','$name','$correct','$wrong','$total','$time', NOW(),'$status')");
         header("location:dash.php?q=4&step=2&eid=$id&n=$total");
     }
 }
@@ -89,7 +89,18 @@ if (isset($_SESSION['key'])) {
         for ($i = 1; $i <= $n; $i++) {
             $qid  = uniqid();
             $qns  = addslashes($_POST['qns' . $i]);
-            $q3   = mysqli_query($con, "INSERT INTO questions VALUES  (NULL,'$eid','$qid','$qns' , '$ch' , '$i')") or die();
+			if($_FILES['uploadfile']['name']!=NULL){
+			$filename = $_FILES["uploadfile"]["name"];
+			$tempname = $_FILES["uploadfile"]["tmp_name"];    
+			$folder = "uploads/".$filename;
+			if (move_uploaded_file($tempname, $folder))  {
+				$q3   = mysqli_query($con, "INSERT INTO questions VALUES  (NULL,'$eid','$qid','$qns' , '$ch' , '$i', '$filename')") or die();
+			}else{
+				echo "Failed to upload image";
+			}
+			}else{
+            $q3   = mysqli_query($con, "INSERT INTO questions VALUES  (NULL,'$eid','$qid','$qns' , '$ch' , '$i', NULL)") or die();
+			}
             $oaid = uniqid();
             $obid = uniqid();
             $ocid = uniqid();

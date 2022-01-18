@@ -29,7 +29,26 @@ $(function () {
              $(".navbar").removeClass("navbar-fixed-top");
         }
     });
-});</script>
+});
+	// Upload img preview
+
+$(document).on("click", ".browse", function () {
+	var file = $(this).parents().find(".file");
+	file.trigger("click");
+});
+$('input[type="file"]').change(function (e) {
+	var fileName = e.target.files[0].name;
+	$("#file").val(fileName);
+
+	var reader = new FileReader();
+	reader.onload = function (e) {
+		// get loaded data and render thumbnail.
+		document.getElementById("preview").src = e.target.result;
+	};
+	// read the image file as a data URL.
+	reader.readAsDataURL(this.files[0]);
+});
+</script>
 </head>
 
 <body  style="background:#eee;">
@@ -317,7 +336,7 @@ if (@$_GET['q'] == 4 && (@$_GET['step']) == 2) {
     echo ' 
 <div class="row">
 <span class="title1" style="margin-left:40%;font-size:30px;"><b>Enter Question Details</b></span><br /><br />
- <div class="col-md-3"></div><div class="col-md-6"><form class="form-horizontal title1" name="form" action="update.php?q=addqns&n=' . @$_GET['n'] . '&eid=' . @$_GET['eid'] . '&ch=4 "  method="POST">
+ <div class="col-md-3"></div><div class="col-md-6"><form class="form-horizontal title1" name="form" action="update.php?q=addqns&n=' . @$_GET['n'] . '&eid=' . @$_GET['eid'] . '&ch=4 "  method="POST" enctype="multipart/form-data">
 <fieldset>
 ';
     
@@ -329,6 +348,14 @@ if (@$_GET['q'] == 4 && (@$_GET['step']) == 2) {
   <textarea rows="3" cols="5" name="qns' . $i . '" class="form-control" placeholder="Write question number ' . $i . ' here..."></textarea>  
   </div>
 </div>
+
+<div class="form-group">
+	<label class="col-md-12 control-label" for="' . $i . 'photo"></label>
+	<div class="col-md-12">
+	<input type="file" name="uploadfile" id="uploadfile" value=""/>              
+</div>
+</div>
+
 <div class="form-group">
   <label class="col-md-12 control-label" for="' . $i . '1"></label>  
   <div class="col-md-12">
@@ -370,7 +397,7 @@ if (@$_GET['q'] == 4 && (@$_GET['step']) == 2) {
     echo '<div class="form-group">
   <label class="col-md-12 control-label" for=""></label>
   <div class="col-md-12"> 
-    <input  type="submit" style="margin-left:45%" class="btn btn-primary" value="Submit" class="btn btn-primary"/>
+    <input  type="submit" style="margin-left:45%" class="btn btn-primary" value="Submit" name="upload" class="btn btn-primary"/>
   </div>
 </div>
 
