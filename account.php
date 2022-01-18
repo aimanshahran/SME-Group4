@@ -250,7 +250,7 @@ if (@$_GET['q'] == 'quiz' && @$_GET['step'] == 2 && isset($_SESSION['6e447159425
                         $q = mysqli_query($con, "UPDATE `rank` SET `score`=$sun ,time=NOW() WHERE username= '$username'") or die('Error174');
                     }
                 }
-            header('location:account.php?q=result&eid=' . $_GET[eid]);
+            header('location:account.php?q=result&eid=' . $_GET['eid']);
 }
 
 if (@$_GET['q'] == 'quiz' && @$_GET['step'] == 2 && isset($_GET['start']) && $_GET['start'] == "start" && (!isset($_SESSION['6e447159425d2d']))) {
@@ -262,7 +262,7 @@ if (@$_GET['q'] == 'quiz' && @$_GET['step'] == 2 && isset($_GET['start']) && $_G
             $timel  = $row['timestamp'];
             $status = $row['status'];
         }
-        $q = mysqli_query($con, "SELECT * FROM quiz WHERE eid='$_GET[eid]' ") or die('Error197');
+        $q = mysqli_query($con, "SELECT * FROM quiz WHERE eid='$_GET[seid]' ") or die('Error197');
         while ($row = mysqli_fetch_array($q)) {
             $ttimel  = $row['time'];
             $qstatus = $row['status'];
@@ -270,7 +270,7 @@ if (@$_GET['q'] == 'quiz' && @$_GET['step'] == 2 && isset($_GET['start']) && $_G
         $remaining = (($ttimel * 60) - ((time() - $timel)));
         if ($status == "ongoing" && $remaining > 0 && $qstatus == "enabled") {
             $_SESSION['6e447159425d2d'] = "6e447159425d2d";
-            header('location:account.php?q=quiz&step=2&eid=' . $_GET[eid] . '&n=' . $_GET[n] . '&t=' . $_GET[t]);
+            header('location:account.php?q=quiz&step=2&eid=' . $_GET['eid'] . '&n=' . $_GET[n] . '&t=' . $_GET[t]);
             
         } else {
                 $q = mysqli_query($con, "UPDATE history SET status='finished' WHERE username='$_SESSION[username]' AND eid='$_GET[eid]' ") or die('Error197');
@@ -294,7 +294,7 @@ if (@$_GET['q'] == 'quiz' && @$_GET['step'] == 2 && isset($_GET['start']) && $_G
                         $q = mysqli_query($con, "UPDATE `rank` SET `score`=$sun ,time=NOW() WHERE username= '$username'") or die('Error174');
                     }
                 }
-            header('location:account.php?q=result&eid=' . $_GET[eid]);
+            header('location:account.php?q=result&eid=' . $_GET['eid']);
         }
         
     } else {
@@ -380,6 +380,7 @@ var countdownTimer = setInterval(\'secondPassed()\', 1000);
                     echo '<img class="image ' . $clrblind . ' src="'.$img.'" style="width:300px" />';
                 }
                 echo '</pre></b>';
+                echo '<b><pre style="background-color:white"><div style="font-size:20px;font-weight:bold;font-family:calibri;margin:10px">' . $sn . ' : ' . $qns . '</div></pre></b>';
             }
             
             echo '<form id="qform" action="update.php?q=quiz&step=2&eid=' . $eid . '&n=' . $sn . '&t=' . $total . '&qid=' . $qid . '" method="POST"  class="form-horizontal">
@@ -460,7 +461,7 @@ var countdownTimer = setInterval(\'secondPassed()\', 1000);
                         $q = mysqli_query($con, "UPDATE `rank` SET `score`=$sun ,time=NOW() WHERE username= '$username'") or die('Error174');
                     }
                 }
-            header('location:account.php?q=result&eid=' . $_GET[eid]);
+            header('location:account.php?q=result&eid=' . $_GET['eid']);
         }
     } else {
         unset($_SESSION['6e447159425d2d']);
@@ -485,7 +486,7 @@ var countdownTimer = setInterval(\'secondPassed()\', 1000);
                         $q = mysqli_query($con, "UPDATE `rank` SET `score`=$sun ,time=NOW() WHERE username= '$username'") or die('Error174');
                     }
                 }
-            header('location:account.php?q=result&eid=' . $_GET[eid]);
+            header('location:account.php?q=result&eid=' . $_GET['eid']);
     }
 }
 if (@$_GET['q'] == 'result' && @$_GET['eid']) {
@@ -595,18 +596,12 @@ if (@$_GET['q'] == 3) {
         $showfrom = 1;
         $showtill = 10;
     }
-    $q = mysqli_query($con, "SELECT * FROM rank");
-    
+    $q = mysqli_query($con, "SELECT * FROM rank") or die('Error223');
     echo '<div class="panel title">
 <table class="table table-striped title1" >
 <tr><td style="vertical-align:middle"><b>Rank</b></td><td style="vertical-align:middle"><b>Name</b></td><td style="vertical-align:middle"><b>Branch</b></td><td style="vertical-align:middle"><b>Username</b></td><td style="vertical-align:middle"><b>Score</b></td></tr>';
     $c = $showfrom-1;
-    if(empty($q)){
-        $total = 0;
-    }
-    else {
-        $total = mysqli_num_rows($q);
-    }
+    $total = mysqli_num_rows($q);
     if($total >= $showfrom){
         $q = mysqli_query($con, "SELECT * FROM rank ORDER BY score DESC, time ASC LIMIT ".($showfrom-1).",10") or die('Error223');
         while ($row = mysqli_fetch_array($q)) {
