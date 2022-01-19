@@ -1,11 +1,11 @@
-body{overflow-x:hidden;width:100%;font: 12px "Century Gothic", "Times Roman", sans-serif;background:#eee;min-height:550px;background-attachment:fixed;}
+body{overflow-x:hidden;max-width:100%;font: 12px "Century Gothic", "Times Roman", sans-serif;background:#eee;min-height:550px;background-attachment:fixed;}
 .bg{min-height:540px;}
 .bg1{background:url(../image/bg.jpg);min-height:535px;background-repeat: repeat-x;background-color: #202020;-webkit-background-size:cover;-moz-background-size:cover;-o-background-size:cover;background-size:cover;}
 @font-face {font-family: 'typo';src: url('../fonts/typo.ttf');}
 @font-face {font-family: 'gothic';src: url('../fonts/gothics.ttf');}
 .panel{border-color:#eee;margin:40px;padding:20px;font: 15px "Century Gothic", "Times Roman", sans-serif;}
 .title{font-family:'typo';}
-.header{background:#202020;height:70px;}
+.header{overflow-x:hidden;max-width:100%;background:#202020;height:70px;}
 .logo{font-family:'typo';font-size:35px;color:#ffffff;margin:15px;}
 .title1{font: 12px "Century Gothic", "Times Roman", sans-serif;}
 .title2{font-family: 'Ubuntu', sans-serif;font-size:20px;}
@@ -14,9 +14,8 @@ body{overflow-x:hidden;width:100%;font: 12px "Century Gothic", "Times Roman", sa
 .logb:hover{color:lightyellow;}
 .sub{color:#FFFFFF;background:#0000ff;font-size:15px;margin:20px;padding:8px;}
 .sub:hover{background-color:#000066;}
-.footer{font-size:15px;text-align:center;border-top:1px solid;border-color:#323232;background-color:#202020;}
-.footer a{margin:25px;color:#0000ff;text-decoration:none;font: 15px "Century Gothic", "Times Roman", sans-serif;}
-.box{padding:9px;}
+.footer{overflow-x:hidden;max-width:100%;padding-top: 9px;padding-bottom: 9px;font-size:15px;text-align:center;border-top:1px solid;border-color:#323232;background-color:#202020;}
+.footer a{color:#0000ff;text-decoration:none;font: 15px "Century Gothic", "Times Roman", sans-serif;}
 hr{color:#000000;}
 .top{margin-top:20px;}
 .log1{font: 15px 'Ubuntu', sans-serif;color:#0000ff;margin-left:10px;}
@@ -37,7 +36,6 @@ hr{color:#000000;}
 .funkyradio input[type="checkbox"]:checked ~ label:before {content: '\2714';text-indent: .9em;color: #333;background-color: #ccc;}
 .funkyradio input[type="radio"]:focus ~ label:before,.funkyradio input[type="checkbox"]:focus ~ label:before {box-shadow: 0 0 0 3px #999;}
 .funkyradio-success input[type="radio"]:checked ~ label:before,.funkyradio-success input[type="checkbox"]:checked ~ label:before {color: #fff;background-color: #5cb85c;}
-
 .Tritanopia{
     filter: url(#tritanopia);
   }
