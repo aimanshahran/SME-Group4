@@ -162,9 +162,35 @@ if (@$_GET['q'] == 4)
               $eid     = $row['eid'];
               $q12 = mysqli_query($con, "SELECT score FROM history WHERE eid='$eid' AND username='$username'") or die('Error98');
               $rowcount = mysqli_num_rows($q12);
+			  $query = mysqli_query($con, "SELECT * FROM history WHERE status = 'ongoing' AND username ='$username' ");
+              $ongoingStatus = mysqli_num_rows($query);
               if ($rowcount == 0) {
-                echo
-                '<tr>
+				if ($ongoingStatus > 0) {
+                  echo
+                  '<tr>
+                                        <td style="vertical-align:middle">' . $c++ . '</td>
+                                        <td style="vertical-align:middle">' . $title . '</td>
+                                        <td style="vertical-align:middle">' . $total . '</td>
+                                        <td style="vertical-align:middle">+' . $correct . '</td>
+                                        <td style="vertical-align:middle">-' . $wrong . '</td>
+                                        <td style="vertical-align:middle">' . $correct * $total . '</td>
+                                        <td style="vertical-align:middle">' . $time . '&nbsp;min</td>
+                                        <td style="vertical-align:middle"><b>
+                                        <a href="account.php?q=quiz&step=2&eid=' . $eid . '&n=1&t=' . $total . '&start=start" 
+                                        class="btn" disabled
+                                        style=
+                                            "color:#FFFFFF;
+                                            background:darkgreen;
+                                            font-size:12px;
+                                            padding:7px;
+                                            padding-left:10px;
+                                            padding-right:10px" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                                        <span class="glyphicon glyphicon-new-window" aria-hidden="true"></span>&nbsp;
+                                        <span><b>Start</b></span></a></b></td>
+                                    </tr>';
+                } else {
+                  echo
+                  '<tr>
                                         <td style="vertical-align:middle">' . $c++ . '</td>
                                         <td style="vertical-align:middle">' . $title . '</td>
                                         <td style="vertical-align:middle">' . $total . '</td>
@@ -185,6 +211,7 @@ if (@$_GET['q'] == 4)
                                         <span class="glyphicon glyphicon-new-window" aria-hidden="true"></span>&nbsp;
                                         <span><b>Start</b></span></a></b></td>
                                     </tr>';
+                }
               } else {
                 $q = mysqli_query($con, "SELECT * FROM history WHERE username='$_SESSION[username]' AND eid='$eid' ") or die('Error197');
                 while ($row = mysqli_fetch_array($q)) {
@@ -218,6 +245,30 @@ if (@$_GET['q'] == 4)
                                         <span class="title1"><b>Continue</b></span></a></b></td>
                                     </tr>';
                 } else {
+					unset($_SESSION['6e447159425d2d']);
+					$username = $_SESSION['username'];
+					$r1 = mysqli_query($con, "UPDATE history SET status='finished',score_updated='true' WHERE eid='$eid' AND username='$username' ") or die('Error');
+				if ($ongoingStatus > 0){
+					echo
+                  '<tr style="color:darkgreen">
+                                        <td style="vertical-align:middle">' . $c++ . '</td>
+                                        <td style="vertical-align:middle">' . $title . '&nbsp;
+                                        <span title="This quiz is already solve by you" class="glyphicon glyphicon-ok" aria-hidden="true"></span></td>
+                                        <td style="vertical-align:middle">' . $total . '</td>
+                                        <td style="vertical-align:middle">+' . $correct . '</td>
+                                        <td style="vertical-align:middle">-' . $wrong . '</td>
+                                        <td style="vertical-align:middle">' . $correct * $total . '</td>
+                                        <td style="vertical-align:middle">' . $time . '&nbsp;min</td>
+                                        <td style="vertical-align:middle"><b><a href="account.php?q=result&eid=' . $eid . '
+                                        "class="btn" disabled
+                                        style=
+                                            "margin:0px;
+                                            background:darkred;
+                                            color:white">
+                                            &nbsp;
+                                        <span class="title1"><b>View Result</b></span></a></b></td>
+                                    </tr>';
+				}else{	
                   echo
                   '<tr style="color:darkgreen">
                                         <td style="vertical-align:middle">' . $c++ . '</td>
@@ -238,6 +289,7 @@ if (@$_GET['q'] == 4)
                                         <span class="title1"><b>View Result</b></span></a></b></td>
                                     </tr>';
                 }
+				}
               }
             }
             $c = 0;
@@ -273,7 +325,6 @@ if (@$_GET['q'] == 4)
             echo '</font></ul></div>';
           }
           if (@$_GET['q'] == 'quiz' && @$_GET['step'] == 2 && isset($_SESSION['6e447159425d2d']) && $_SESSION['6e447159425d2d'] == "6e447159425d2d" && isset($_GET['endquiz']) == 'end') {
-			//echo 'test';
             unset($_SESSION['6e447159425d2d']);
             $q = mysqli_query($con, "UPDATE history SET status='finished' WHERE username='$_SESSION[username]' AND eid='$_GET[eid]' ") or die('Error197');
             $q = mysqli_query($con, "SELECT * FROM history WHERE eid='$_GET[eid]' AND username='$_SESSION[username]'") or die('Error156');
@@ -301,7 +352,6 @@ if (@$_GET['q'] == 4)
           }
 
           if (@$_GET['q'] == 'quiz' && @$_GET['step'] == 2 && isset($_GET['start']) && $_GET['start'] == "start" && (!isset($_SESSION['6e447159425d2d']))) {
-			//echo 'test2';
             $q = mysqli_query($con, "SELECT * FROM history WHERE username='$_SESSION[username]' AND eid='$_GET[eid]' ") or die('Error197');
             if (mysqli_num_rows($q) > 0) {
               $q = mysqli_query($con, "SELECT * FROM history WHERE username='$_SESSION[username]' AND eid='$_GET[eid]' ") or die('Error197');
@@ -316,9 +366,10 @@ if (@$_GET['q'] == 4)
               }
               $remaining = (($ttimel * 60) - ((time() - $timel)));
               if ($status == "ongoing" && $remaining > 0 && $qstatus == "enabled") {
+				unset($_SESSION['6e447159425d2d']);  
                 $_SESSION['6e447159425d2d'] = "6e447159425d2d";
-                header('location:account.php?q=quiz&step=2&eid=' . $_GET['eid'] . '&n=' . $_GET['n'] . '&t=' . $_GET['t']);
-				exit();
+                //header('location:account.php?q=quiz&step=2&eid=' . $_GET['eid'] . '&n=' . $_GET['n'] . '&t=' . $_GET['t']);
+				//exit();
               } else {
 				$s = 0;
 				$scorestatus = "false";
@@ -357,7 +408,6 @@ if (@$_GET['q'] == 4)
 
 
           if (@$_GET['q'] == 'quiz' && @$_GET['step'] == 2 && isset($_SESSION['6e447159425d2d']) && $_SESSION['6e447159425d2d'] == "6e447159425d2d") {
-			//echo 'test3';
             $q = mysqli_query($con, "SELECT * FROM history WHERE username='$username' AND eid='$_GET[eid]' ") or die('Error197');
 
             if (mysqli_num_rows($q) > 0) {
@@ -456,10 +506,6 @@ var countdownTimer = setInterval(\'secondPassed()\', 1000);
                 } else {
                   $ans = "";
                 }
-                //removed the answer view
-                // if (strlen($ans) > 0) {
-                //     echo "<font style=\"color:green;font-size:12px;font-weight:bold\">Selected answer: </font><font style=\"color:#565252;font-size:12px;\">" . $ans . "</font>&nbsp;&nbsp;<a href=update.php?q=quiz&step=2&eid=$eid&n=$sn&t=$total&qid=$qid&delanswer=delanswer><span class=\"glyphicon glyphicon-remove\" style=\"font-size:12px;color:darkred\"></span></a><br /><br />";
-                // }
                 echo '<div class="funkyradio">';
                 $q = mysqli_query($con, "SELECT * FROM options WHERE qid='$qid' ");
                 while ($row = mysqli_fetch_array($q)) {
@@ -600,6 +646,7 @@ var countdownTimer = setInterval(\'secondPassed()\', 1000);
           }
 		  //DISPLAY ANSWER
           if (@$_GET['q'] == 'result' && @$_GET['eid']) {
+			unset($_SESSION['6e447159425d2d']);
 			$q = mysqli_query($con, "UPDATE history SET status='finished', score_updated='true' WHERE username='$_SESSION[username]' AND eid='$_GET[eid]' ") or die('Error197');
             $eid = @$_GET['eid'];
             $q = mysqli_query($con, "SELECT * FROM quiz WHERE eid='$eid' ") or die('Error157');
