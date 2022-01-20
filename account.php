@@ -52,20 +52,6 @@ function validateForm() {
     document.getElementById("errormsg").innerHTML="Phone number must be 10 digits long";
     return false;
   }
-  var a = document.forms["form"]["password"].value;
-  if(a == null || a == ""){
-    document.getElementById("errormsg").innerHTML="Password must be filled out";
-    return false;
-  }
-  if(a.length<4 || a.length>15){
-    document.getElementById("errormsg").innerHTML="Passwords must be 4 to 15 characters long.";
-    return false;
-  }
-  var b = document.forms["form"]["cpassword"].value;
-  if (a!=b){
-    document.getElementById("errormsg").innerHTML="Passwords must match";
-    return false;
-  }
 }
 </script>
 <?php
@@ -128,7 +114,11 @@ if (@$_GET['q'] == 3)
 	<li <?php 
 if (@$_GET['q'] == 4)
     echo 'class="active"';
-?>><a href="account.php?q=4"><span class="glyphicon glyphicon-stats" aria-hidden="true"></span>&nbsp;Profile Setting</a></li></ul>      
+?>><a href="account.php?q=4"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span>&nbsp;Profile Setting</a></li>
+	<li <?php 
+if (@$_GET['q'] == 5)
+    echo 'class="active"';
+?>><a href="account.php?q=5"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>&nbsp;Update Password</a></li></ul>      
       </div>
   </div>
 </nav>
@@ -913,6 +903,7 @@ if (@$_GET['q'] == 3) {
     }
     echo '</tr></table></div>';
 }
+
 if (@$_GET['q'] == 4) { ?>
 	
 	<div class="bg">
@@ -1127,7 +1118,66 @@ if (@$_GET['q'] == 4) { ?>
 	</form>
 	</div>
 	</div></div>
-<?php }
+<?php 
+	}
+if (@$_GET['q'] == 5) {?>
+	<div class="bg">
+	<div class="row">
+	<div class="panel"> 
+	  <form class="form-horizontal" name="form" action="passwordupdate.php" onSubmit="return validateForm()" method="POST">
+	<fieldset>
+	<div class="form-group">
+	  <label class="col-md-12 control-label" for="name"></label>  
+	  <div class="col-md-12">
+	  <h3 align="center">Update Password</h3>
+	<?php 
+		 if(isset($_GET['e'])){
+			 echo '<p style="color:green;font-size:15px;text-align: center">' . @$_GET['e'] . '</p>';
+		 }else if(isset($_GET['m'])){
+			 echo '<p style="color:red;font-size:15px;text-align: center">' . @$_GET['m'] . '</p>';
+		 }
+		
+	$getInfo = mysqli_query($con, "SELECT * FROM user WHERE id='$iduser'");
+	$row = mysqli_fetch_array($getInfo);
+	$gender = $row['gender'];
+	$branch = $row['branch'];
+	$clrblindname = $row['clrname'];
+	$phonenum = $row['phno'];
+	?>
+	  </div>
+	</div> 
+	<div class="form-group">
+	  <label class="col-md-12 control-label" for="password"></label>
+	  <div class="col-md-12">
+		<input id="password" name="password" placeholder="Enter old password" class="form-control input-md" type="password">
+	  </div>
+	</div>
+		
+	<div class="form-group">
+	  <label class="col-md-12 control-label" for="password"></label>
+	  <div class="col-md-12">
+		<input id="password" name="newpassword" placeholder="Enter new password" class="form-control input-md" type="password">
+	  </div>
+	</div>
+
+	<div class="form-group">
+	  <label class="col-md-12control-label" for="cpassword"></label>
+	  <div class="col-md-12">
+		<input id="cpassword" name="cpassword" placeholder="Confirm new Password" class="form-control input-md" type="password">
+	  </div>
+	</div>
+	<div class="form-group">
+	  <label class="col-md-12 control-label" for=""></label>
+	  <div class="col-md-12" style="text-align: right"> 
+		<input type="submit" value="Update now" class="btn btn-primary" style="text-align:center" />
+	  </div>
+	</div>
+	</fieldset>
+	</form>
+	</div>
+	</div></div>
+<?php
+}
 ?>
 </div></div></div></div>
 <svg
