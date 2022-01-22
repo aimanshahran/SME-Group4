@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jan 19, 2022 at 04:40 PM
+-- Generation Time: Jan 22, 2022 at 03:52 PM
 -- Server version: 10.4.19-MariaDB
 -- PHP Version: 7.3.28
 
@@ -61,7 +61,9 @@ INSERT INTO `answer` (`id`, `qid`, `ansid`) VALUES
 (2, '61e8308f7dad7', '61e8308f7dd4b'),
 (3, '61e8308f7e9e1', '61e8308f7f5e9'),
 (4, '61e8308f801b5', '61e8308f805d5'),
-(5, '61e8308f814b5', '61e8308f817dc');
+(5, '61e8308f814b5', '61e8308f817dc'),
+(6, '61ec1a1cc3840', '61ec1a1ccb3ca'),
+(7, '61ec1a1ccf95e', '61ec1a1cd0466');
 
 -- --------------------------------------------------------
 
@@ -120,7 +122,15 @@ INSERT INTO `options` (`id`, `qid`, `option`, `optionid`) VALUES
 (17, '61e8308f814b5', 'Iterative Enhancement Model', '61e8308f817d8'),
 (18, '61e8308f814b5', 'RAD', '61e8308f817db'),
 (19, '61e8308f814b5', 'Spiral', '61e8308f817dc'),
-(20, '61e8308f814b5', 'Waterfall', '61e8308f817dd');
+(20, '61e8308f814b5', 'Waterfall', '61e8308f817dd'),
+(21, '61ec1a1cc3840', 'Heat', '61ec1a1ccb3c6'),
+(22, '61ec1a1cc3840', 'Grinding', '61ec1a1ccb3c9'),
+(23, '61ec1a1cc3840', 'Growth of yeast cells', '61ec1a1ccb3ca'),
+(24, '61ec1a1cc3840', 'Low pressure', '61ec1a1ccb3cb'),
+(25, '61ec1a1ccf95e', 'consumers', '61ec1a1cd0462'),
+(26, '61ec1a1ccf95e', 'producers', '61ec1a1cd0466'),
+(27, '61ec1a1ccf95e', 'host', '61ec1a1cd0467'),
+(28, '61ec1a1ccf95e', 'small in size', '61ec1a1cd0468');
 
 -- --------------------------------------------------------
 
@@ -147,7 +157,9 @@ INSERT INTO `questions` (`id`, `eid`, `qid`, `qns`, `choice`, `sn`, `image`) VAL
 (2, '61e82f51ddb1e', '61e8308f7dad7', 'What is Software Engineering?', 4, 2, NULL),
 (3, '61e82f51ddb1e', '61e8308f7e9e1', 'Why do bugs and failures occur in software?', 4, 3, 'computer_bug_-_debug_resize_md.jpg'),
 (4, '61e82f51ddb1e', '61e8308f801b5', 'What does SDLC stands for?', 4, 4, 'SDLC-Maintenance-Highlighted.png'),
-(5, '61e82f51ddb1e', '61e8308f814b5', '_________ is a software development life cycle model that is chosen if the development team has less experience on similar projects.', 4, 5, NULL);
+(5, '61e82f51ddb1e', '61e8308f814b5', '_________ is a software development life cycle model that is chosen if the development team has less experience on similar projects.', 4, 5, NULL),
+(6, '61ec19af8e29b', '61ec1a1cc3840', 'What helps in the rise of bread or dosa dough?', 4, 1, 'Biological-Viruses-768x576.jpg'),
+(7, '61ec19af8e29b', '61ec1a1ccf95e', 'The status of algae in the aquatic food chain is', 4, 2, 'image.axd.jpeg');
 
 -- --------------------------------------------------------
 
@@ -157,6 +169,7 @@ INSERT INTO `questions` (`id`, `eid`, `qid`, `qns`, `choice`, `sn`, `image`) VAL
 
 CREATE TABLE `quiz` (
   `id` int(100) NOT NULL,
+  `subID` int(11) NOT NULL,
   `eid` varchar(100) NOT NULL,
   `title` varchar(100) NOT NULL,
   `correct` int(11) NOT NULL,
@@ -172,8 +185,9 @@ CREATE TABLE `quiz` (
 -- Dumping data for table `quiz`
 --
 
-INSERT INTO `quiz` (`id`, `eid`, `title`, `correct`, `wrong`, `total`, `time`, `date`, `status`, `adminID`) VALUES
-(1, '61e82f51ddb1e', 'Fundamental Of Software Engineering', 20, 0, 5, 15, '2022-01-19 15:33:37', 'disabled', 1);
+INSERT INTO `quiz` (`id`, `subID`, `eid`, `title`, `correct`, `wrong`, `total`, `time`, `date`, `status`, `adminID`) VALUES
+(1, 1, '61e82f51ddb1e', 'Fundamental Of Software Engineering', 20, 0, 5, 15, '2022-01-22 14:27:34', 'enabled', 1),
+(2, 2, '61ec19af8e29b', 'Biological Viruses', 50, 0, 2, 5, '2022-01-22 14:52:14', 'enabled', 1);
 
 -- --------------------------------------------------------
 
@@ -188,12 +202,30 @@ CREATE TABLE `rank` (
   `time` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `rank`
+-- Table structure for table `subject`
 --
 
-INSERT INTO `rank` (`id`, `username`, `score`, `time`) VALUES
-(1, 'aifan98', 560, '2022-01-19 15:29:09');
+CREATE TABLE `subject` (
+  `subID` int(11) NOT NULL,
+  `subjectName` varchar(200) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `subject`
+--
+
+INSERT INTO `subject` (`subID`, `subjectName`) VALUES
+(1, 'Science Computer'),
+(2, 'Biology'),
+(3, 'Mathematics'),
+(4, 'Chemistry'),
+(5, 'Arts'),
+(6, 'Languages'),
+(7, 'Geography'),
+(8, 'Physical Science');
 
 -- --------------------------------------------------------
 
@@ -288,7 +320,8 @@ ALTER TABLE `questions`
 ALTER TABLE `quiz`
   ADD UNIQUE KEY `id` (`id`),
   ADD UNIQUE KEY `eid` (`eid`),
-  ADD KEY `FKadminID` (`adminID`);
+  ADD KEY `FKadminID` (`adminID`),
+  ADD KEY `FKsubID` (`subID`);
 
 --
 -- Indexes for table `rank`
@@ -296,6 +329,12 @@ ALTER TABLE `quiz`
 ALTER TABLE `rank`
   ADD PRIMARY KEY (`id`),
   ADD KEY `FK_Username` (`username`);
+
+--
+-- Indexes for table `subject`
+--
+ALTER TABLE `subject`
+  ADD PRIMARY KEY (`subID`);
 
 --
 -- Indexes for table `user`
@@ -331,7 +370,7 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT for table `answer`
 --
 ALTER TABLE `answer`
-  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `history`
@@ -343,25 +382,31 @@ ALTER TABLE `history`
 -- AUTO_INCREMENT for table `options`
 --
 ALTER TABLE `options`
-  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT for table `questions`
 --
 ALTER TABLE `questions`
-  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `quiz`
 --
 ALTER TABLE `quiz`
-  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `rank`
 --
 ALTER TABLE `rank`
   MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `subject`
+--
+ALTER TABLE `subject`
+  MODIFY `subID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `user`
@@ -409,7 +454,8 @@ ALTER TABLE `questions`
 -- Constraints for table `quiz`
 --
 ALTER TABLE `quiz`
-  ADD CONSTRAINT `FKadminID` FOREIGN KEY (`adminID`) REFERENCES `admin` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `FKadminID` FOREIGN KEY (`adminID`) REFERENCES `admin` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `FKsubID` FOREIGN KEY (`subID`) REFERENCES `subject` (`subID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `rank`

@@ -239,20 +239,32 @@ if (@$_GET['q'] == 3 && !(@$_GET['step'])) {
 <span class="title1" style="margin-left:40%;font-size:30px;"><b>Enter Quiz Details</b></span><br /><br />
  <div class="col-md-3"></div><div class="col-md-6">   <form class="form-horizontal title1" name="form" action="update.php?q=addquiz"  method="POST">
 <fieldset>
+
+<select id="subjectname" name="subjectname" placeholder="Select Subject Name" class="form-control input-md" >
+<option>Select subject name</option>';
+	$resultsubject = mysqli_query($con, "SELECT * FROM subject") or die('Error');
+	while ($rowsubject = mysqli_fetch_array($resultsubject)) {
+		echo'
+		  <option value="'.$rowsubject['subID'].'">'.$rowsubject['subjectName'].'</option>';
+	}
+	echo '</select><br />';
+	
+echo '
+
 <div class="form-group">
   <label class="col-md-12 control-label" for="name"></label>  
   <div class="col-md-12">
   <input id="name" name="name" placeholder="Enter Quiz title" class="form-control input-md" type="text">
-    
   </div>
 </div>
+
 <div class="form-group">
   <label class="col-md-12 control-label" for="total"></label>  
   <div class="col-md-12">
   <input id="total" name="total" placeholder="Enter total number of questions" class="form-control input-md" type="number">
-    
   </div>
 </div>
+
 <div class="form-group">
   <label class="col-md-12 control-label" for="right"></label>  
   <div class="col-md-12">
