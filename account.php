@@ -530,6 +530,16 @@ var countdownTimer = setInterval(\'secondPassed()\', 1000);
                                     <label for="' . $optionid . '" style="width:50%"><div style="color:black;font-size:12px;word-wrap:break-word">&nbsp;&nbsp;' . $option . '</div></label></div>';
                 }
                 echo '</div>';
+				if ($_GET['n'] == 1) {
+					echo '<br />
+					<button type="button" class="btn btn-default" onclick="frmreset()" style="height:30px"></span>
+					<font style="font-size:12px;font-weight:bold">Reset</font></button>
+					&nbsp;&nbsp;&nbsp;&nbsp;
+
+					<button type="submit" class="btn btn-primary" id="sbutton" style="height:30px">
+					<span class="glyphicon glyphicon-arrow-right" aria-hidden="true"  style="font-size:12px"></span>
+					</button>&nbsp;&nbsp;&nbsp;&nbsp;';
+                } else {
                 if ($_GET["t"] > $_GET['n'] && $_GET["n"] != 1) {
                   echo '<br />
                                     <a href="account.php?q=quiz&step=2&eid=' . $eid . '&n=' . ($sn - 1) . '&t=' . $total . '
@@ -577,8 +587,8 @@ var countdownTimer = setInterval(\'secondPassed()\', 1000);
                                      <button type="submit" class="btn btn-primary"  id="sbutton" style="height:30px">
                                     <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"  style="font-size:12px"></span>
                                     </button>&nbsp;&nbsp;&nbsp;&nbsp;</form><br><br>';
-                } else {
-                }
+                } 
+               }
                 $q = mysqli_query($con, "SELECT * FROM questions WHERE eid='$_GET[eid]'") or die("Error222");
                 $i = 1;
                 while ($row = mysqli_fetch_array($q)) {
